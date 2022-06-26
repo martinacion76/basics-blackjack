@@ -1,7 +1,12 @@
+// v1. two players with two cards each, compare
+// v2. add player hit or stand
+// v3. add dealer hit or stand
+// v4. add variable ace values
+
 var makeDeck = function () {
   var deck = [];
   var suitIndex = 0;
-  var suitList = ["hearts", "diamonds", "clubs", "spades"];
+  var suitList = ["Hearts", "Diamonds", "Clubs", "Spades"];
   // var suitList = ["♥️", "♦", "♣️", "♠️"];
   while (suitIndex < 4) {
     var currentSuit = suitList[suitIndex];
@@ -9,13 +14,13 @@ var makeDeck = function () {
     while (rankCounter <= 13) {
       var cardName = rankCounter;
       if (rankCounter == 1) {
-        cardName = "ace";
+        cardName = "Ace";
       } else if (rankCounter == 11) {
-        cardName = "jack";
+        cardName = "Jack";
       } else if (rankCounter == 12) {
-        cardName = "queen";
+        cardName = "Queen";
       } else if (rankCounter == 13) {
-        cardName = "king";
+        cardName = "King";
       }
       var card = {
         name: cardName,
@@ -51,60 +56,73 @@ var getCards = function (amount) {
   var currentCardCount = 0;
   var cardSet = [];
   while(currentCardCount < amount) {
-    var newCard = shuffledDeck.pop();
-    cardSet[currentCardCount] = newCard;
-    console.log(`new card: ${newCard.name} of ${newCard.suit}`);
-    console.log('current card set: ', cardSet)
+    cardSet[currentCardCount] = shuffledDeck.pop();
+    // console.log(`new card: ${cardSet[currentCardCount].name} of ${cardSet[currentCardCount].suit}`);
+    // console.log('current card set: ', cardSet)
     currentCardCount += 1;
   }
-  console.log('final card set: ', cardSet)
+  // console.log('final card set: ', cardSet)
+  // console.log('object type of cardSet: ', typeof cardSet)
   return cardSet;
 };
 
+var startGame = function () {
+  var playerCards = [];
+  var dealerCards = [];
+  playerCards = getCards(2);
+  console.log('player first two cards: ', playerCards);
 
+  dealerCards = getCards(2);
+  console.log('dealer first two cards: ', dealerCards);
 
-// var playerIndex = 0;
-// var playerCards = [];
-// while (playerIndex < input) {
-//   playerCards[playerIndex] = shuffledDeck.pop();
-//   console.log("PlayercardsIndiv:", playerCards[playerIndex]);
-//   playerIndex += 1;
-// }
-// console.log("Playercards:", playerCards);
+  var playerMessage = 'Player hand: ';
+  for (let p = 0; p < playerCards.length; p += 1) {
+    playerMessage += "<br>" + playerCards[p].name + " of " + playerCards[p].suit;
+  }
+  
+  var dealerMessage = 'Dealer hand: '
+  for (let d = 0; d < dealerCards.length; d += 1) {
+    dealerMessage += "<br>" + dealerCards[d].name + " of " + dealerCards[d].suit;
+  }
 
-
+  return [playerCards, dealerCards, playerMessage, dealerMessage]
+}
 
 var gameStateStart = 'game state: start (give two start cards)';
 var gameStateHit = 'game state: hit';
 var gameStateStand = 'game state: stand';
 var gameState = gameStateStart;
 
-// var resetGame = function () {
-//   currentPlayer = 'player';
-//   gameState = game;
-//   allPlayersScore = [];
-// }
-
 var deck = makeDeck();
 var shuffledDeck = shuffleCards(deck);
 var gameMode = 'stand';
 var currentPlayer = 'player';
-var playerCards = [];
-var dealerCards = [];
+
+var resetGame = function () {
+  currentPlayer = 'player';
+  gameState = gameStateStart;
+  allPlayersScore = [];
+  playerCards = [];
+  dealerCards = [];
+  deck = makeDeck();
+}
 
 var main = function (input) {
   // console.log('checking game state on submit click: ' + gameState);
   // console.log('checking currentPlayer on submit click: ' + currentPlayer);
-  var myOutputValue = 'yes';
+  var myOutputValue = '';
 
-  // makeDeck();
-  // var playerCards.push
-  // var chosenCard = shuffledDeck.pop();
+  var start = startGame();
+  const playerCardSet = start[0];
+  const dealerCardSet = start[1];
+  const playerResult = start[2];
+  const dealerResult = start[3];
+  
+  
+  console.log('player card set: ', playerCardSet);
+  console.log('dealer card set: ', dealerCardSet);
 
-  // myOutputValue = `card drawn is ${chosenCard.name} of ${chosenCard.suit}`;
-  getCards(4);
-  myOutputValue = 'player cards are'
-
+  myOutputValue = playerResult + '<br><br>' + dealerResult;
   return myOutputValue;
 };
 
