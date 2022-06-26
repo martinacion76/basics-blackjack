@@ -56,7 +56,8 @@ var getCards = function (amount) {
   var currentCardCount = 0;
   var cardSet = [];
   while(currentCardCount < amount) {
-    cardSet[currentCardCount] = shuffledDeck.pop();
+    // cardSet[currentCardCount] = shuffledDeck.pop();
+    cardSet.push(shuffledDeck.pop());
     // console.log(`new card: ${cardSet[currentCardCount].name} of ${cardSet[currentCardCount].suit}`);
     // console.log('current card set: ', cardSet)
     currentCardCount += 1;
@@ -66,12 +67,12 @@ var getCards = function (amount) {
   return cardSet;
 };
 
-var startGame = function () {
-  var playerCards = [];
-  var dealerCards = [];
-  var playerSum = 0;
-  var dealerSum = 0;
+var playerCards = [];
+var dealerCards = [];
+var playerSum = 0;
+var dealerSum = 0;
 
+var startGame = function () {
   playerCards = getCards(2);
   dealerCards = getCards(2);
 
@@ -92,15 +93,17 @@ var startGame = function () {
   return [playerCards, dealerCards, playerOutputValue, dealerOutputValue, playerSum, dealerSum]
 }
 
-var gameStateStart = 'game state: start (give two start cards)';
-var gameStateHit = 'game state: hit';
-var gameStateStand = 'game state: stand';
-var gameState = gameStateStart;
+var playerHit = function () {
+  playerCards.push(getCards(1)[0]);
+  console.log('player cards: ', playerCards);
+  return playerCards;
+}
 
-var deck = makeDeck();
-var shuffledDeck = shuffleCards(deck);
-var gameMode = 'stand';
-var currentPlayer = 'player';
+// var dealerHit = function () {
+//   dealerCards.push(getCards(1)[0]);
+//   console.log('dealer cards: ', dealerCards);
+//   return dealerCards;
+// }
 
 var resetGame = function () {
   currentPlayer = 'player';
@@ -111,90 +114,103 @@ var resetGame = function () {
   deck = makeDeck();
 }
 
+var gameStateStart = 'game state start (give two start cards)';
+var gameStateChoose = 'game state choosing';
+var gameStateHit = 'game state hit';
+var gameStateStand = 'game state stand';
+var gameState = gameStateStart;
+
+var deck = makeDeck();
+var shuffledDeck = shuffleCards(deck);
+var currentPlayer = 'Player';
+
+var playerCurrentSum = 0;
+var dealerCurrentSum = 0;
+
 var main = function (input) {
-  // console.log('checking game state on submit click: ' + gameState);
-  // console.log('checking currentPlayer on submit click: ' + currentPlayer);
+  console.log('checking game state on submit click: ' + gameState);
   var myOutputValue = '';
 
-  var start = startGame();
-  const playerCardSet = start[0];
-  const dealerCardSet = start[1];
-  const playerMessage = start[2];
-  const dealerMessage = start[3];
-  const playerCurrentSum = start[4];
-  const dealerCurrentSum = start[5];
+  if (gameState == gameStateStart) {
+    console.log('control flow: gameState == gameStateStart');
+
+    var start = startGame();
+    const playerCardSet = start[0];
+    const dealerCardSet = start[1];
+    const playerMessage = start[2];
+    const dealerMessage = start[3];
+    playerCurrentSum = start[4];
+    dealerCurrentSum = start[5];
   
-  console.log('player card set: ', playerCardSet);
-  console.log('dealer card set: ', dealerCardSet);
+    console.log('player card set: ', playerCardSet);
+    console.log('dealer card set: ', dealerCardSet);
 
-  myOutputValue = playerMessage + '<br>Sum: ' + playerCurrentSum + '<br><br>' + dealerMessage + '<br>Sum: ' + dealerCurrentSum;
+    myOutputValue = playerMessage + '<br>Sum: ' + playerCurrentSum + '<br><br>' + dealerMessage + '<br>Sum: ' + dealerCurrentSum + '<br><br>' + currentPlayer + ' turn: hit or stand?';
 
-  if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
-    myOutputValue += '<br><br>Player went over 21. Dealer did not. <br><br>Dealer wins!' 
+    gameState = gameStateChoose;
+
+    return myOutputValue;
   }
-  else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
-    myOutputValue += '<br><br>Dealer went over 21. Player did not. <br><br>Player wins!' 
-  }
-  else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
-    myOutputValue += '<br><br>Both player and dealer went over 21. <br><br>Draw.'
-  }
-  else {
-    if (playerCurrentSum > dealerCurrentSum) {
-      if (playerCurrentSum == 21) {
-        myOutputValue += '<br><br>Player had 21. <br><br>Player wins by black jack!'
+
+  if (gameState == gameStateChoose) {
+    console.log('control flow: gameState == gameStateChoose');
+
+    if (input == 'hit') {
+      gameState = gameStateHit;
+      console.log('control flow: gameState == gameStateHit');
+
+      playerHit();
+
+      myOutputValue = 'Player hits. Current cards:';
+
+      for (let p = 0; p < playerCards.length; p += 1) {
+        playerSum += playerCards[p].rank;
+        myOutputValue += "<br>" + playerCards[p].name + " of " + playerCards[p].suit;
+      }
+
+      gameState = gameStateChoose;
+
+      return myOutputValue;
+    }
+
+    else if (input == 'stand') {
+      gameState = gameStateStand;
+      console.log('control flow: gameState == gameStateStand');
+
+      myOutputValue = 'Player stands.';
+
+      if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
+        myOutputValue += '<br><br>Player went over 21. Dealer did not. <br><br>Dealer wins!' 
+      }
+      else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
+        myOutputValue += '<br><br>Dealer went over 21. Player did not. <br><br>Player wins!' 
+      }
+      else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
+        myOutputValue += '<br><br>Both player and dealer went over 21. <br><br>Draw.'
       }
       else {
-        myOutputValue += '<br><br>Player was closer to 21. <br><br>Player wins!'
+        if (playerCurrentSum > dealerCurrentSum) {
+          if (playerCurrentSum == 21) {
+            myOutputValue += '<br><br>Player had 21. <br><br>Player wins by black jack!'
+          }
+          else {
+            myOutputValue += '<br><br>Player was closer to 21. <br><br>Player wins!'
+          }
+        }
+        else if (playerCurrentSum < dealerCurrentSum) {
+          if (dealerCurrentSum == 21) {
+            myOutputValue += '<br><br>Dealer had 21. <br><br>Dealer wins by black jack!'
+          }
+          else {
+            myOutputValue += '<br><br>Dealer was closer to 21. <br><br>Dealer wins!'
+          }
+        }
+        else {
+          myOutputValue += '<br><br> Both dealer and player have the same total. <br><br>Draw.'
+        }
       }
-    }
-    else if (playerCurrentSum < dealerCurrentSum) {
-      if (dealerCurrentSum == 21) {
-        myOutputValue += '<br><br>Dealer had 21. <br><br>Dealer wins by black jack!'
-      }
-      else {
-        myOutputValue += '<br><br>Dealer was closer to 21. <br><br>Dealer wins!'
-      }
-    }
-    else {
-      myOutputValue += '<br><br> Both dealer and player have the same total. <br><br>Draw.'
+
+      return myOutputValue;
     }
   }
-
-  return myOutputValue;
 };
-
-// //////////////////////////////////////////////////
-// input (either hit or stand); so need input validation
-// if(!input || input != 'hit' || input != 'stand')
-// playerCards = [] -> name, rank, suit
-// computerCards = [] -> name, rank, suit
-// // 1. Deck is shuffled. (shuffleDeck function)
-// // 2. User clicks Submit to deal cards. (.pop)
-// // 3. The cards are analysed for game winning conditions, e.g. Blackjack.
-// // The cards are displayed to the user. (output the cards), push both cards at the start 
-// playerCd = generateCards(2)
-// computerCd = generateCards(2)
-// function generateCards(numCards)
-
-  
-// gameMode = stand;
-// currentplayer = player
-// currentplayer == player;
-// if user decides to hit, gameMode == hit, pick a card. (push a card again)
-// if use decides to stand, gameMode == stand, continue to dealer, currentplayer = dealer
-// // The user decides whether to hit or stand, using the submit button to submit their choice. (sum the cards, then decide to hit or stand)
-// currentplayer == dealer
-// If dealer < 17, has to hit. Hit means to get another card (pop again), push a card again, (generateCards(1))
-// gameMode == hit
-// else, gameMode == stand
-// if gameMode == stand and currentPlayer == dealer,
-// game will end
-// // Aces could be 1 or 11. 
-// if (10 (jack/queen/king)) + ace = blackjack
-// if sum(all the players cards) > 21, and sum(all the dealer cards) > 21, they all lose.
-// if sum(all the player cards) > 21 and sum(all the dealer cards) <= 21, dealer Wins
-// if sum(all the player cards) <= 21 and sum(all the dealer cards) > 21, player Wins
-// if sum(all the player cards) <= 21 and sum(all the dealer cards) <= 21, compare the cards, whichever is higher wins. 
-// // The user's cards are analysed for winning or losing conditions.
-// // The computer decides to hit or stand automatically based on game rules.
-// // The game either ends or continues.
