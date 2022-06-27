@@ -2,10 +2,15 @@
 // v2. add player hit or stand
 // v3. add dealer hit or stand
 // v4. add variable ace values
+  // if total including ace < 21, ace value = 11
+  // otherwise, ace value = 1
 
 function removeInstructions() {
   var instructions = document.getElementById("start-instructions");
   instructions.style.display = "none";
+  // document.querySelector('#deal-button').disabled = true;
+  document.querySelector('#hit-button').disabled = false;
+  document.querySelector('#stand-button').disabled = false;
 }
 
 var makeDeck = function () {
@@ -108,6 +113,68 @@ var startGame = function () {
   console.log('current dealer sum: ', dealerSum);
 
   return [playerCards, dealerCards, playerOutputValue, dealerOutputValue, playerSum, dealerSum]
+}
+
+var calculatePlayerHandValue = function () {
+  var totalPlayerHandValue = 0;
+  var aceCounter = 0;
+
+  var index = 0;
+  while (index < playerCards.length) {
+    var currentCard = playerCards[index];
+    if (currentCard.name == 'Jack' || currentCard.name == 'Queen' || currentCard.name == 'King') {
+      totalPlayerHandValue += 10;
+    }
+    else if (currentCard.name == 'Ace') {
+      totalPlayerHandValue += 11;
+      aceCounter += 1;
+    }
+    else {
+      totalPlayerHandValue += currentCard.rank
+    }
+    index += 1;
+  }
+
+  index = 0;
+  while (index < aceCounter) {
+    if (totalPlayerHandValue > 21) {
+      totalPlayerHandValue -= 10;
+    }
+    index +=1
+  }
+
+  return totalPlayerHandValue
+}
+
+var calculateDealerHandValue = function () {
+  var totalDealerHandValue = 0;
+  var aceCounter = 0;
+
+  var index = 0;
+  while (index < dealerCards.length) {
+    var currentCard = dealerCards[index];
+    if (currentCard.name == 'Jack' || currentCard.name == 'Queen' || currentCard.name == 'King') {
+      totalDealerHandValue += 10;
+    }
+    else if (currentCard.name == 'Ace') {
+      totalDealerHandValue += 11;
+      aceCounter += 1;
+    }
+    else {
+      totalDealerHandValue += currentCard.rank
+    }
+    index += 1;
+  }
+
+  index = 0;
+  while (index < aceCounter) {
+    if (totalDealerHandValue > 21) {
+      totalDealerHandValue -= 10;
+    }
+    index +=1
+  }
+
+  return totalDealerHandValue
 }
 
 var playerHit = function () {
@@ -220,8 +287,6 @@ var main = function (input) {
     }
     else {
       gameState = gameStateDealerStand;
-      myOutputValue += '<br><br>Click submit to see who won.';
-      return myOutputValue;
     }
   }
 
@@ -253,8 +318,13 @@ var main = function (input) {
     console.log('control flow: gameState == ' + gameState);
     console.log('checking current player on submit click: ' + currentPlayer);
 
+    playerCurrentSum = calculatePlayerHandValue();
+    dealerCurrentSum = calculateDealerHandValue();
+
     console.log('final player sum: ', playerCurrentSum);
     console.log('final dealer sum: ', dealerCurrentSum);
+
+    console.log('final player value: ', playerCurrentSum);
 
     if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
       myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!' 
@@ -276,7 +346,7 @@ var main = function (input) {
       }
       else if (playerCurrentSum < dealerCurrentSum) {
         if (dealerCurrentSum == 21) {
-          myOutputValue += 'Player had' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins by black jack!'
+          myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins by black jack!'
         }
         else {
           myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!'
