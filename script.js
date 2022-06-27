@@ -15,11 +15,11 @@ var makeDeck = function () {
       var cardName = rankCounter;
       if (rankCounter == 1) {
         cardName = "Ace";
-      } else if (rankCounter == 10) {
+      } else if (rankCounter == 11) {
         cardName = "Jack";
-      } else if (rankCounter == 10) {
+      } else if (rankCounter == 12) {
         cardName = "Queen";
-      } else if (rankCounter == 10) {
+      } else if (rankCounter == 13) {
         cardName = "King";
       }
       var card = {
@@ -27,6 +27,18 @@ var makeDeck = function () {
         suit: currentSuit,
         rank: rankCounter,
       };
+
+      // changing rank of face cards to 10
+      if (card.name == "Jack") {
+        card.rank = 10;
+      }
+      else if (card.name == "Queen") {
+        card.rank = 10;
+      }
+      else if (card.name == "King") {
+        card.rank = 10;
+      }
+
       deck.push(card);
       rankCounter += 1;
     }
@@ -81,14 +93,14 @@ var startGame = function () {
     playerSum += playerCards[p].rank;
     playerOutputValue += "<br>" + playerCards[p].name + " of " + playerCards[p].suit;
   }
-  console.log('final player sum: ', playerSum)
+  console.log('current player sum: ', playerSum);
   
   var dealerOutputValue = 'Dealer hand: '
   for (let d = 0; d < dealerCards.length; d += 1) {
     dealerSum += dealerCards[d].rank;
     dealerOutputValue += "<br>" + dealerCards[d].name + " of " + dealerCards[d].suit;
   }
-  console.log('final dealer sum: ', dealerSum)
+  console.log('current dealer sum: ', dealerSum);
 
   return [playerCards, dealerCards, playerOutputValue, dealerOutputValue, playerSum, dealerSum]
 }
@@ -99,11 +111,11 @@ var playerHit = function () {
   return playerCards;
 }
 
-// var dealerHit = function () {
-//   dealerCards.push(getCards(1)[0]);
-//   console.log('dealer cards: ', dealerCards);
-//   return dealerCards;
-// }
+var dealerHit = function () {
+  dealerCards.push(getCards(1)[0]);
+  console.log('dealer cards: ', dealerCards);
+  return dealerCards;
+}
 
 var resetGame = function () {
   currentPlayer = 'player';
@@ -115,9 +127,11 @@ var resetGame = function () {
 }
 
 var gameStateStart = 'game state start (give two start cards)';
-var gameStateChoose = 'game state choosing';
-var gameStateHit = 'game state hit';
-var gameStateStand = 'game state stand';
+var gameStatePlayerChoose = 'game state player choosing';
+var gameStatePlayerHit = 'game state player hit';
+var gameStatePlayerStand = 'game state player stand';
+var gameStateDealerHit = 'game state dealer hit';
+var gameStateDealerStand = 'game state dealer stand';
 var gameState = gameStateStart;
 
 var deck = makeDeck();
@@ -132,7 +146,8 @@ var main = function (input) {
   var myOutputValue = '';
 
   if (gameState == gameStateStart) {
-    console.log('control flow: gameState == gameStateStart');
+    console.log('control flow: gameState == ' + gameState);
+    console.log('checking current player on submit click: ' + currentPlayer);
 
     var start = startGame();
     const playerCardSet = start[0];
@@ -147,70 +162,126 @@ var main = function (input) {
 
     myOutputValue = playerMessage + '<br>Sum: ' + playerCurrentSum + '<br><br>' + dealerMessage + '<br>Sum: ' + dealerCurrentSum + '<br><br>' + currentPlayer + ' turn: hit or stand?';
 
-    gameState = gameStateChoose;
+    gameState = gameStatePlayerChoose;
 
     return myOutputValue;
   }
 
-  if (gameState == gameStateChoose) {
-    console.log('control flow: gameState == gameStateChoose');
+  if (gameState == gameStatePlayerChoose) {
+    console.log('control flow: gameState == ' + gameState);
+    console.log('checking current player on submit click: ' + currentPlayer);
 
     if (input == 'hit') {
-      gameState = gameStateHit;
-      console.log('control flow: gameState == gameStateHit');
+      gameState = gameStatePlayerHit;
+    }
+    else if (input == 'stand') {
+      gameState = gameStatePlayerStand;
+    }
+  }
 
-      playerHit();
+  if (gameState == gameStatePlayerHit) {
+    console.log('control flow: gameState == ' + gameState);
+    console.log('checking current player on submit click: ' + currentPlayer);
 
-      myOutputValue = 'Player hits. Current cards:';
+    playerHit();
 
-      for (let p = 0; p < playerCards.length; p += 1) {
-        playerSum += playerCards[p].rank;
-        myOutputValue += "<br>" + playerCards[p].name + " of " + playerCards[p].suit;
-      }
+    myOutputValue = 'Player hits. Current cards:';
 
-      gameState = gameStateChoose;
-
-      return myOutputValue;
+    playerCurrentSum = 0;
+    for (let p = 0; p < playerCards.length; p += 1) {
+      playerCurrentSum += playerCards[p].rank;
+      myOutputValue += "<br>" + playerCards[p].name + " of " + playerCards[p].suit;
     }
 
-    else if (input == 'stand') {
-      gameState = gameStateStand;
-      console.log('control flow: gameState == gameStateStand');
+    console.log('current player sum: ', playerCurrentSum);
+    console.log('final dealer sum: ', dealerCurrentSum);
 
-      myOutputValue = 'Player stands.';
+    gameState = gameStatePlayerChoose;
 
-      if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
-        myOutputValue += '<br><br>Player went over 21. Dealer did not. <br><br>Dealer wins!' 
-      }
-      else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
-        myOutputValue += '<br><br>Dealer went over 21. Player did not. <br><br>Player wins!' 
-      }
-      else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
-        myOutputValue += '<br><br>Both player and dealer went over 21. <br><br>Draw.'
-      }
-      else {
-        if (playerCurrentSum > dealerCurrentSum) {
-          if (playerCurrentSum == 21) {
-            myOutputValue += '<br><br>Player had 21. <br><br>Player wins by black jack!'
-          }
-          else {
-            myOutputValue += '<br><br>Player was closer to 21. <br><br>Player wins!'
-          }
-        }
-        else if (playerCurrentSum < dealerCurrentSum) {
-          if (dealerCurrentSum == 21) {
-            myOutputValue += '<br><br>Dealer had 21. <br><br>Dealer wins by black jack!'
-          }
-          else {
-            myOutputValue += '<br><br>Dealer was closer to 21. <br><br>Dealer wins!'
-          }
+    return myOutputValue;
+  }
+
+  if (gameState == gameStatePlayerStand) {
+    currentPlayer = 'dealer';
+
+    console.log('control flow: gameState == ' + gameState);
+    console.log('checking current player on submit click: ' + currentPlayer);
+
+    console.log('current dealer sum: ' + dealerCurrentSum);
+
+    if (dealerCurrentSum < 17) {
+      gameState = gameStateDealerHit;
+    }
+    else {
+      gameState = gameStateDealerStand;
+      myOutputValue += '<br><br>Click submit to see who won.';
+      return myOutputValue;
+    }
+  }
+
+  if (gameState == gameStateDealerHit) {
+    console.log('control flow: gameState == ' + gameState);
+    console.log('checking current player on submit click: ' + currentPlayer);
+
+    myOutputValue = 'Dealer hits. <br>Current cards:';
+    
+    dealerHit();
+
+    dealerCurrentSum = 0;
+    for (let d = 0; d < dealerCards.length; d += 1) {
+      dealerCurrentSum += dealerCards[d].rank;
+      myOutputValue += "<br>" + dealerCards[d].name + " of " + dealerCards[d].suit;
+    }
+
+    // myOutputValue += '<br><br>Click submit to hit for dealer.'
+
+    console.log('final player sum: ', playerCurrentSum);
+    console.log('final dealer sum: ', dealerCurrentSum);
+
+    gameState = gameStateDealerStand;
+
+    myOutputValue += '<br><br>Click submit to see who won.';
+
+    return myOutputValue;
+  }
+
+  if (gameState == gameStateDealerStand) {
+    console.log('control flow: gameState == ' + gameState);
+    console.log('checking current player on submit click: ' + currentPlayer);
+
+    console.log('final player sum: ', playerCurrentSum);
+    console.log('final dealer sum: ', dealerCurrentSum);
+
+    if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
+      myOutputValue += 'Player went over 21. Dealer did not. <br><br>Dealer wins!' 
+    }
+    else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
+      myOutputValue += 'Dealer went over 21. Player did not. <br><br>Player wins!' 
+    }
+    else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
+      myOutputValue += 'Both player and dealer went over 21. <br><br>Draw.'
+    }
+    else {
+      if (playerCurrentSum > dealerCurrentSum) {
+        if (playerCurrentSum == 21) {
+          myOutputValue += 'Player had 21. <br><br>Player wins by black jack!'
         }
         else {
-          myOutputValue += '<br><br> Both dealer and player have the same total. <br><br>Draw.'
+          myOutputValue += 'Player was closer to 21. <br><br>Player wins!'
         }
       }
-
-      return myOutputValue;
+      else if (playerCurrentSum < dealerCurrentSum) {
+        if (dealerCurrentSum == 21) {
+          myOutputValue += 'Dealer had 21. <br><br>Dealer wins by black jack!'
+        }
+        else {
+          myOutputValue += 'Dealer was closer to 21. <br><br>Dealer wins!'
+        }
+      }
+      else {
+        myOutputValue += 'Both dealer and player have the same total. <br><br>Draw.'
+      }
     }
+    return myOutputValue;
   }
 };
