@@ -3,6 +3,11 @@
 // v3. add dealer hit or stand
 // v4. add variable ace values
 
+function removeInstructions() {
+  var instructions = document.getElementById("start-instructions");
+  instructions.style.display = "none";
+}
+
 var makeDeck = function () {
   var deck = [];
   var suitIndex = 0;
@@ -234,14 +239,12 @@ var main = function (input) {
       myOutputValue += "<br>" + dealerCards[d].name + " of " + dealerCards[d].suit;
     }
 
-    // myOutputValue += '<br><br>Click submit to hit for dealer.'
-
     console.log('final player sum: ', playerCurrentSum);
     console.log('final dealer sum: ', dealerCurrentSum);
 
     gameState = gameStateDealerStand;
 
-    myOutputValue += '<br><br>Click submit to see who won.';
+    myOutputValue += '<br><br>Click reveal to see who won.';
 
     return myOutputValue;
   }
@@ -254,10 +257,10 @@ var main = function (input) {
     console.log('final dealer sum: ', dealerCurrentSum);
 
     if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
-      myOutputValue += 'Player went over 21. Dealer did not. <br><br>Dealer wins!' 
+      myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!' 
     }
     else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
-      myOutputValue += 'Dealer went over 21. Player did not. <br><br>Player wins!' 
+      myOutputValue += 'Dealer had ' + dealerCurrentSum +'. Player had ' + playerCurrentSum + '. <br><br>Dealer wins!'
     }
     else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
       myOutputValue += 'Both player and dealer went over 21. <br><br>Draw.'
@@ -265,22 +268,22 @@ var main = function (input) {
     else {
       if (playerCurrentSum > dealerCurrentSum) {
         if (playerCurrentSum == 21) {
-          myOutputValue += 'Player had 21. <br><br>Player wins by black jack!'
+          myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Player wins by black jack!'
         }
         else {
-          myOutputValue += 'Player was closer to 21. <br><br>Player wins!'
+          myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Player wins!'
         }
       }
       else if (playerCurrentSum < dealerCurrentSum) {
         if (dealerCurrentSum == 21) {
-          myOutputValue += 'Dealer had 21. <br><br>Dealer wins by black jack!'
+          myOutputValue += 'Player had' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins by black jack!'
         }
         else {
-          myOutputValue += 'Dealer was closer to 21. <br><br>Dealer wins!'
+          myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!'
         }
       }
       else {
-        myOutputValue += 'Both dealer and player have the same total. <br><br>Draw.'
+        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Draw!'
       }
     }
     resetGame();
