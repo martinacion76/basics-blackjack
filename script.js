@@ -6,8 +6,8 @@
 var makeDeck = function () {
   var deck = [];
   var suitIndex = 0;
-  var suitList = ["Hearts", "Diamonds", "Clubs", "Spades"];
-  // var suitList = ["♥️", "♦", "♣️", "♠️"];
+  // var suitList = ["Hearts", "Diamonds", "Clubs", "Spades"];
+  var suitList = ["♥️", "♦", "♣️", "♠️"];
   while (suitIndex < 4) {
     var currentSuit = suitList[suitIndex];
     var rankCounter = 1;
@@ -120,9 +120,10 @@ var dealerHit = function () {
 var resetGame = function () {
   currentPlayer = 'player';
   gameState = gameStateStart;
-  allPlayersScore = [];
   playerCards = [];
   dealerCards = [];
+  playerSum = 0;
+  dealerSum = 0;
   deck = makeDeck();
 }
 
@@ -282,6 +283,9 @@ var main = function (input) {
         myOutputValue += 'Both dealer and player have the same total. <br><br>Draw.'
       }
     }
+    resetGame();
+    console.log('game is reset');
+
     return myOutputValue;
   }
 };
