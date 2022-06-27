@@ -79,9 +79,11 @@
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
+        border-radius: 10px;
       }
 
       input {
+        font-family: "Karla", sans-serif;
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
@@ -90,14 +92,21 @@
       }
 
       button {
+        font-family: "Karla", sans-serif;
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
         padding: 0 6px;
       }
 
+      #buttons-container {
+        margin: auto;
+        text-align: center;
+      }
+
       #output-div {
-        background-color: lightgrey;
+        background-color: slategray;
+        color: ivory;
         margin: 20px auto;
         padding: 20px;
         width: 100%;
@@ -120,6 +129,9 @@
   </head>
 
   <body>
+    <!-- <p id='demo' style='display: none'>Hello Javascript</p>     
+    <button type='button' onclick="toggleText()">Click me</button> -->
+
     <h1 class="header">
       <img class="logo-img" src="https://ra-web-files.s3.ap-southeast-1.amazonaws.com/all/brand/logo.png" />
       Rocket Academy
@@ -127,15 +139,22 @@
     </h1>
     <h1 class="header">♣️ Basics - Blackjack ♠️</h1>
     <div id="container">
+      <div id="start-instructions" style='display: block'>
       <p>Hello! Welcome to Blackjack!</p>
       <p>The player (you) and the dealer both get two cards at the start. You can then choose to get another card to add to their deck (hit) or stick to their current cards (stand).</p>
       <p>When you choose to stand, it becomes the dealer's turn. Dealer automatically hits if his cards have a total sum of less than 17. Otherwise, the winner is chosen.</p>
       <p>The player with cards of a sum closest to 21 wins, but going over 21 is not considered.</p>
-      <p>Click submit to start the game. Good luck!</p><br>
+      <p>Click deal to start the game. Good luck!</p><br>
+      </div>
       <p>Input:</p>
       <input id="input-field" />
       <br />
-      <button id="submit-button">Submit</button>
+      <div id="buttons-container">
+        <button id="deal-button" onclick="removeInstructions()">Deal</button>
+        <button id="hit-button">Hit</button>
+        <button id="stand-button">Stand</button>
+        <button id="reveal-button">Reveal</button>
+      </div>
       <p>Output:</p>
       <div id="output-div"></div>
     </div>
@@ -143,7 +162,7 @@
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var button = document.querySelector("#submit-button");
+      var button = document.querySelector("#deal-button");
       button.addEventListener("click", function () {
         // Set result to input value
         var input = document.querySelector("#input-field");
