@@ -137,7 +137,7 @@
       Rocket Academy
       <img class="logo-img" src="https://ra-web-files.s3.ap-southeast-1.amazonaws.com/all/brand/logo.png" />
     </h1>
-    <h1 class="header">♣️ Basics - Blackjack ♠️</h1>
+    <h1 class="header">♣️ Mart's Blackjack ♠️</h1>
     <div id="container">
       <div id="start-instructions" style='display: block'>
       <p>Hello! Welcome to Blackjack!</p>
@@ -151,7 +151,7 @@
       <br />
       <div id="buttons-container">
         <button id="deal-button" onclick="removeInstructions()">Deal</button>
-        <button id="hit-button" disabled="true" onclick="playerHit()">Hit</button>
+        <button id="hit-button" disabled="true">Hit</button>
         <button id="stand-button" disabled="true">Stand</button>
         <button id="reveal-button" disabled="true">Reveal</button>
       </div>
@@ -165,15 +165,39 @@
       var button = document.querySelector("#deal-button");
       button.addEventListener("click", function () {
         // Set result to input value
-        var input = document.querySelector("#input-field");
-        var result = main(input.value);
+        // var input = document.querySelector("#input-field");
+        // var result = main(input.value);
 
-        // Display result in output element
+        // // Display result in output element
         var output = document.querySelector("#output-div");
-        output.innerHTML = result;
+        output.innerHTML = main();
 
-        // Reset input value
-        input.value = "";
+        // // Reset input value
+        // input.value = "";
+      });
+
+      var hitButton = document.getElementById("hit-button");
+      hitButton.addEventListener("click", function () {
+        console.log("hit button working");
+
+        var output = document.querySelector("#output-div");
+        output.innerHTML = playerHit()[1];
+      });
+
+      var standButton = document.getElementById("stand-button");
+      standButton.addEventListener("click", () => {
+        console.log("stand button working");
+        
+        var output = document.querySelector("#output-div");
+        output.innerHTML = playerStand();
+      });
+
+      var revealButton = document.getElementById("reveal-button");
+      revealButton.addEventListener("click", () => {
+        console.log("reveal button working");
+        
+        var output = document.querySelector("#output-div");
+        output.innerHTML = revealWinner();
       });
     </script>
   </body>
