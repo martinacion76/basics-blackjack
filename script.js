@@ -8,7 +8,7 @@
 function removeInstructions() {
   var instructions = document.getElementById("start-instructions");
   instructions.style.display = "none";
-  // document.querySelector('#deal-button').disabled = true;
+  document.querySelector('#deal-button').disabled = true;
   document.querySelector('#hit-button').disabled = false;
   document.querySelector('#stand-button').disabled = false;
 }
