@@ -178,9 +178,122 @@ var calculateDealerHandValue = function () {
 }
 
 var playerHit = function () {
+  console.log('control flow: gameState == ' + gameState);
+  console.log('checking current player on submit click: ' + currentPlayer);
+  
+  console.log('player hit');
   playerCards.push(getCards(1)[0]);
   console.log('player cards: ', playerCards);
-  return playerCards;
+
+  console.log('working');
+
+  var myOutputValue = 'Player hits. Current cards:';
+
+  playerCurrentSum = 0;
+  for (let p = 0; p < playerCards.length; p += 1) {
+    playerCurrentSum += playerCards[p].rank;
+    myOutputValue += "<br>" + playerCards[p].name + " of " + playerCards[p].suit;
+  }
+
+  console.log('current player sum: ', playerCurrentSum);
+  console.log('final dealer sum: ', dealerCurrentSum);
+
+  gameState = gameStatePlayerChoose;
+
+  return [playerCards, myOutputValue, gameState];
+}
+
+var playerStand = function () {
+  var myOutputValue = ''
+  currentPlayer = 'dealer';
+
+  console.log('control flow: gameState == ' + gameState);
+  console.log('checking current player on submit click: ' + currentPlayer);
+
+  console.log('current dealer sum: ' + dealerCurrentSum);
+
+  if (dealerCurrentSum < 17) {
+    console.log('control flow: gameState == ' + gameState);
+    console.log('checking current player on submit click: ' + currentPlayer);
+
+    myOutputValue = 'Dealer hits.';
+    
+    dealerHit();
+
+    dealerCurrentSum = 0;
+    for (let d = 0; d < dealerCards.length; d += 1) {
+      dealerCurrentSum += dealerCards[d].rank;
+      // myOutputValue += " Current cards:<br>" + dealerCards[d].name + " of " + dealerCards[d].suit;
+    }
+
+    console.log('final player sum: ', playerCurrentSum);
+    console.log('final dealer sum: ', dealerCurrentSum);
+
+    gameState = gameStateDealerStand;
+
+    myOutputValue += '<br><br>Click reveal to see who won.';
+    document.querySelector('#reveal-button').disabled = false;
+  }
+  else {
+    myOutputValue += 'Dealer stands.<br><br>Click reveal to see who won.';
+  }
+  document.querySelector('#reveal-button').disabled = false;
+  return myOutputValue; 
+}
+
+var revealWinner = function () {
+  myOutputValue = '';
+
+  console.log('control flow: gameState == ' + gameState);
+  console.log('checking current player on submit click: ' + currentPlayer);
+
+  // myOutputValue += 'Click reveal to see who won.';
+
+  playerCurrentSum = calculatePlayerHandValue();
+  dealerCurrentSum = calculateDealerHandValue();
+
+  console.log('final player sum: ', playerCurrentSum);
+  console.log('final dealer sum: ', dealerCurrentSum);
+
+  console.log('final player value: ', playerCurrentSum);
+
+  if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
+    myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!' 
+  }
+  else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
+    myOutputValue += 'Dealer had ' + dealerCurrentSum +'. Player had ' + playerCurrentSum + '. <br><br>Dealer wins!'
+  }
+  else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
+    myOutputValue += 'Both player and dealer went over 21. <br><br>Draw.'
+  }
+  else {
+    if (playerCurrentSum > dealerCurrentSum) {
+      if (playerCurrentSum == 21) {
+        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Player wins by black jack!'
+      }
+      else {
+        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Player wins!'
+      }
+    }
+    else if (playerCurrentSum < dealerCurrentSum) {
+      if (dealerCurrentSum == 21) {
+        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins by black jack!'
+      }
+      else {
+        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!'
+      }
+    }
+    else {
+      myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Draw!'
+    }
+  }
+
+  myOutputValue += '<br><br>Click deal to play again!'
+
+  resetGame();
+  console.log('game is reset');
+
+  return myOutputValue;
 }
 
 var dealerHit = function () {
@@ -233,7 +346,7 @@ var main = function (input) {
     console.log('player card set: ', playerCardSet);
     console.log('dealer card set: ', dealerCardSet);
 
-    myOutputValue = playerMessage + '<br>Sum: ' + playerCurrentSum + '<br><br>' + dealerMessage + '<br>Sum: ' + dealerCurrentSum + '<br><br>' + currentPlayer + ' turn: hit or stand?';
+    myOutputValue = playerMessage + '<br><br>' + currentPlayer + ' turn: hit or stand?';
 
     gameState = gameStatePlayerChoose;
 
@@ -250,115 +363,5 @@ var main = function (input) {
     else if (input == 'stand') {
       gameState = gameStatePlayerStand;
     }
-  }
-
-  if (gameState == gameStatePlayerHit) {
-    console.log('control flow: gameState == ' + gameState);
-    console.log('checking current player on submit click: ' + currentPlayer);
-
-    playerHit();
-
-    myOutputValue = 'Player hits. Current cards:';
-
-    playerCurrentSum = 0;
-    for (let p = 0; p < playerCards.length; p += 1) {
-      playerCurrentSum += playerCards[p].rank;
-      myOutputValue += "<br>" + playerCards[p].name + " of " + playerCards[p].suit;
-    }
-
-    console.log('current player sum: ', playerCurrentSum);
-    console.log('final dealer sum: ', dealerCurrentSum);
-
-    gameState = gameStatePlayerChoose;
-
-    return myOutputValue;
-  }
-
-  if (gameState == gameStatePlayerStand) {
-    currentPlayer = 'dealer';
-
-    console.log('control flow: gameState == ' + gameState);
-    console.log('checking current player on submit click: ' + currentPlayer);
-
-    console.log('current dealer sum: ' + dealerCurrentSum);
-
-    if (dealerCurrentSum < 17) {
-      gameState = gameStateDealerHit;
-    }
-    else {
-      gameState = gameStateDealerStand;
-    }
-  }
-
-  if (gameState == gameStateDealerHit) {
-    console.log('control flow: gameState == ' + gameState);
-    console.log('checking current player on submit click: ' + currentPlayer);
-
-    myOutputValue = 'Dealer hits. <br>Current cards:';
-    
-    dealerHit();
-
-    dealerCurrentSum = 0;
-    for (let d = 0; d < dealerCards.length; d += 1) {
-      dealerCurrentSum += dealerCards[d].rank;
-      myOutputValue += "<br>" + dealerCards[d].name + " of " + dealerCards[d].suit;
-    }
-
-    console.log('final player sum: ', playerCurrentSum);
-    console.log('final dealer sum: ', dealerCurrentSum);
-
-    gameState = gameStateDealerStand;
-
-    myOutputValue += '<br><br>Click reveal to see who won.';
-
-    return myOutputValue;
-  }
-
-  if (gameState == gameStateDealerStand) {
-    console.log('control flow: gameState == ' + gameState);
-    console.log('checking current player on submit click: ' + currentPlayer);
-
-    playerCurrentSum = calculatePlayerHandValue();
-    dealerCurrentSum = calculateDealerHandValue();
-
-    console.log('final player sum: ', playerCurrentSum);
-    console.log('final dealer sum: ', dealerCurrentSum);
-
-    console.log('final player value: ', playerCurrentSum);
-
-    if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
-      myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!' 
-    }
-    else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
-      myOutputValue += 'Dealer had ' + dealerCurrentSum +'. Player had ' + playerCurrentSum + '. <br><br>Dealer wins!'
-    }
-    else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
-      myOutputValue += 'Both player and dealer went over 21. <br><br>Draw.'
-    }
-    else {
-      if (playerCurrentSum > dealerCurrentSum) {
-        if (playerCurrentSum == 21) {
-          myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Player wins by black jack!'
-        }
-        else {
-          myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Player wins!'
-        }
-      }
-      else if (playerCurrentSum < dealerCurrentSum) {
-        if (dealerCurrentSum == 21) {
-          myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins by black jack!'
-        }
-        else {
-          myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!'
-        }
-      }
-      else {
-        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Draw!'
-      }
-    }
-    resetGame();
-    console.log('game is reset');
-
-    return myOutputValue;
   }
 };
