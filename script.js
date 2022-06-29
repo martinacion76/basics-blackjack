@@ -11,6 +11,7 @@ function removeInstructions() {
   document.querySelector('#deal-button').disabled = true;
   document.querySelector('#hit-button').disabled = false;
   document.querySelector('#stand-button').disabled = false;
+  document.querySelector('#reveal-button').disabled = true;
 }
 
 var makeDeck = function () {
@@ -98,7 +99,7 @@ var startGame = function () {
   playerCards = getCards(2);
   dealerCards = getCards(2);
 
-  var playerOutputValue = 'Player hand: ';
+  var playerOutputValue = 'Your hand: ';
   for (let p = 0; p < playerCards.length; p += 1) {
     playerSum += playerCards[p].rank;
     playerOutputValue += "<br>" + playerCards[p].name + " of " + playerCards[p].suit;
@@ -187,7 +188,7 @@ var playerHit = function () {
 
   console.log('working');
 
-  var myOutputValue = 'Player hits. Current cards:';
+  var myOutputValue = 'You hit. Current cards:';
 
   playerCurrentSum = 0;
   for (let p = 0; p < playerCards.length; p += 1) {
@@ -237,6 +238,8 @@ var playerStand = function () {
   else {
     myOutputValue += 'Dealer stands.<br><br>Click reveal to see who won.';
   }
+  document.querySelector('#hit-button').disabled = true;
+  document.querySelector('#stand-button').disabled = true;
   document.querySelector('#reveal-button').disabled = false;
   return myOutputValue; 
 }
@@ -293,6 +296,9 @@ var revealWinner = function () {
   resetGame();
   console.log('game is reset');
 
+  document.querySelector('#deal-button').disabled = false;
+  document.querySelector('#reveal-button').disabled = true;
+
   return myOutputValue;
 }
 
@@ -346,7 +352,7 @@ var main = function (input) {
     console.log('player card set: ', playerCardSet);
     console.log('dealer card set: ', dealerCardSet);
 
-    myOutputValue = playerMessage + '<br><br>' + currentPlayer + ' turn: hit or stand?';
+    myOutputValue = playerMessage + '<br><br>' + 'Hit or stand?';
 
     gameState = gameStatePlayerChoose;
 
