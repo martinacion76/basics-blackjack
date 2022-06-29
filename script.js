@@ -5,6 +5,11 @@
   // if total including ace < 21, ace value = 11
   // otherwise, ace value = 1
 
+var playerChooseImage = '';
+var dealerTurnImage = '';
+var playerWinImage = '<img src=https://c.tenor.com/ypZyi9yT8JAAAAAC/stranger-things-stranger-things-gifs.gif>';
+var playerLoseImage = '';
+
 function removeInstructions() {
   var instructions = document.getElementById("start-instructions");
   instructions.style.display = "none";
@@ -264,7 +269,7 @@ var revealWinner = function () {
     myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!' 
   }
   else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
-    myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win!' 
+    myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win!' + '<br><br>' + playerWinImage
   }
   else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
     myOutputValue += 'Both you and the dealer went over 21. <br><br>Draw.'
@@ -272,10 +277,10 @@ var revealWinner = function () {
   else {
     if (playerCurrentSum > dealerCurrentSum) {
       if (playerCurrentSum == 21) {
-        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win by black jack!'
+        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win by black jack!' + '<br><br>' + playerWinImage
       }
       else {
-        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win!'
+        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win!' + '<br><br>' + playerWinImage
       }
     }
     else if (playerCurrentSum < dealerCurrentSum) {
