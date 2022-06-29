@@ -258,33 +258,33 @@ var revealWinner = function () {
   console.log('final player value: ', playerCurrentSum);
 
   if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
-    myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!' 
+    myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!' 
   }
   else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
-    myOutputValue += 'Dealer had ' + dealerCurrentSum +'. Player had ' + playerCurrentSum + '. <br><br>Dealer wins!'
+    myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win!' 
   }
   else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
-    myOutputValue += 'Both player and dealer went over 21. <br><br>Draw.'
+    myOutputValue += 'Both you and the dealer went over 21. <br><br>Draw.'
   }
   else {
     if (playerCurrentSum > dealerCurrentSum) {
       if (playerCurrentSum == 21) {
-        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Player wins by black jack!'
+        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win by black jack!'
       }
       else {
-        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Player wins!'
+        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win!'
       }
     }
     else if (playerCurrentSum < dealerCurrentSum) {
       if (dealerCurrentSum == 21) {
-        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins by black jack!'
+        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins by black jack!'
       }
       else {
-        myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!'
+        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!'
       }
     }
     else {
-      myOutputValue += 'Player had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Draw!'
+      myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Draw!'
     }
   }
 
