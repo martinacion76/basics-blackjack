@@ -5,11 +5,11 @@
   // if total including ace < 21, ace value = 11
   // otherwise, ace value = 1
 
-var startGif = '<img src=https://c.tenor.com/eencwBPnwgcAAAAd/stranger-things.gif>'
 var playerChooseGif = '<img src=https://c.tenor.com/cC6KsZwvNBEAAAAC/presenting-eddie-munson.gif>';
 var dealerTurnGif = '<img src=https://c.tenor.com/t8fWVUuih2gAAAAd/stranger-things-number-one.gif>';
-var playerWinGif= '<img src=https://c.tenor.com/ypZyi9yT8JAAAAAC/stranger-things-stranger-things-gifs.gif>';
+var playerWinGif= '<img src=https://c.tenor.com/Eb4OiNR6YegAAAAC/high-five-stranger-things.gif>';
 var playerLoseGif = '<img src=https://c.tenor.com/OplXM1-hjhgAAAAd/arriving-monster-vecna.gif>';
+var drawGif= '<img src=https://c.tenor.com/ypZyi9yT8JAAAAAC/stranger-things-stranger-things-gifs.gif>';
 
 function removeInstructions() {
   var instructions = document.getElementById("start-instructions");
@@ -212,7 +212,7 @@ var playerHit = function () {
 
   gameState = gameStatePlayerChoose;
 
-  return [playerCards, myOutputValue, gameState, playerChooseGif];
+  return [playerCards, myOutputValue, gameState];
 }
 
 var playerStand = function () {
@@ -228,7 +228,7 @@ var playerStand = function () {
     console.log('control flow: gameState == ' + gameState);
     console.log('checking current player on submit click: ' + currentPlayer);
 
-    myOutputValue = 'Dealer hits.<br><br>' + dealerTurnGif;
+    myOutputValue = 'Vecna hits.<br><br>' + dealerTurnGif;
     
     dealerHit();
 
@@ -301,7 +301,7 @@ var revealWinner = function () {
       myOutputValue += 'You had ' + playerCurrentSum +'. Vecna had ' + dealerCurrentSum + '. <br><br>Vecna wins by black jack!' + '<br><br>' + playerLoseGif
     }
     else {
-      myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Draw!'
+      myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Draw!' + '<br><br>'+ drawGif;
     }
   }
 
@@ -366,7 +366,8 @@ var main = function (input) {
     console.log('player card set: ', playerCardSet);
     console.log('dealer card set: ', dealerCardSet);
 
-    myOutputValue = playerMessage + '<br><br>' + playerChooseGif + '<br><br>' + 'Hit or stand?';
+    myOutputValue = playerMessage + '<br><br>' + playerChooseGif;
+    myOutputValue += '<br><br>Hit or stand?';
 
     gameState = gameStatePlayerChoose;
 

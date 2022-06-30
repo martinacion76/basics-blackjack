@@ -44,6 +44,7 @@
     <!-- fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Gantari:wght@300&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <style>
@@ -51,8 +52,12 @@
         box-sizing: border-box;
       }
 
+      .fit {
+        height: 100vh;
+      }
+
       body {
-        font-family: "Karla", sans-serif;
+        font-family: "Gantari";
         margin-left: 30px;
         margin-right: 30px;
         background-color:white;
@@ -80,7 +85,8 @@
       }
 
       #container {
-        background-color: lightsteelblue;
+        color: whitesmoke;
+        background-color: #B22222;
         margin: 40px auto;
         max-width: 800px;
         padding: 38px 31px;
@@ -89,7 +95,7 @@
 
       button {
         cursor: pointer;
-        font-family: "Karla", sans-serif;
+        font-family: "Gantari";
         font-size: 21px;
         line-height: 33px;
         margin: 0 0 23px 0;
@@ -102,7 +108,7 @@
       }
 
       #output-div {
-        background-color: slategray;
+        background-color: #2c1414;
         color: ivory;
         margin: 20px auto;
         padding: 20px;
@@ -137,7 +143,7 @@
       <img class="logo-img" src="https://ra-web-files.s3.ap-southeast-1.amazonaws.com/all/brand/logo.png" />
     </h1>
     <h1 class="header">♣️ Vecna's Blackjack ♠️</h1>
-    <div id="container">
+    <div id="container" width="75%">
       <div id="start-instructions" style='display: block'>
       <p>Hello! Welcome to Vecna's Blackjack!</p>
       <p>You have been given the power to <b>decide the fate of Hawkins by playing blackjack against the one and only Vecna</b>. Should you win, you save the lives of many. Otherwise, the darkeness of the Upside Down prevails.</p>
@@ -154,7 +160,11 @@
         <button id="reveal-button" disabled="true">Reveal</button>
       </div>
       <div id="output-div">
-        <img src="https://c.tenor.com/eencwBPnwgcAAAAd/stranger-things.gif" alt="start-gif">
+        <img src="https://c.tenor.com/eencwBPnwgcAAAAd/stranger-things.gif" id="start-gif">
+        <!-- <img src="https://c.tenor.com/cC6KsZwvNBEAAAAC/presenting-eddie-munson.gif" id="player-choose-gif" max-width="75%">
+        <img src="https://c.tenor.com/t8fWVUuih2gAAAAd/stranger-things-number-one.gif" id="dealer-turn-gif" max-width="75%" style="display:none;"/>
+        <img src="https://c.tenor.com/ypZyi9yT8JAAAAAC/stranger-things-stranger-things-gifs.gif" id="player-win-gif" max-width="75%" style="display:none;"/>
+        <img src="https://c.tenor.com/OplXM1-hjhgAAAAd/arriving-monster-vecna.gif" id="player-lose-gif" max-width="75%" style="display:none;"/> -->
       </div>
     </div>
     <!-- Import program logic -->
