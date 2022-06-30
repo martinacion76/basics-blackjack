@@ -5,18 +5,22 @@
   // if total including ace < 21, ace value = 11
   // otherwise, ace value = 1
 
-var playerChooseImage = '';
-var dealerTurnImage = '';
-var playerWinImage = '<img src=https://c.tenor.com/ypZyi9yT8JAAAAAC/stranger-things-stranger-things-gifs.gif>';
-var playerLoseImage = '';
+var startGif = '<img src=https://c.tenor.com/eencwBPnwgcAAAAd/stranger-things.gif>'
+var playerChooseGif = '<img src=https://c.tenor.com/cC6KsZwvNBEAAAAC/presenting-eddie-munson.gif>';
+var dealerTurnGif = '<img src=https://c.tenor.com/t8fWVUuih2gAAAAd/stranger-things-number-one.gif>';
+var playerWinGif= '<img src=https://c.tenor.com/ypZyi9yT8JAAAAAC/stranger-things-stranger-things-gifs.gif>';
+var playerLoseGif = '<img src=https://c.tenor.com/OplXM1-hjhgAAAAd/arriving-monster-vecna.gif>';
 
 function removeInstructions() {
   var instructions = document.getElementById("start-instructions");
   instructions.style.display = "none";
+
   document.querySelector('#deal-button').disabled = true;
   document.querySelector('#hit-button').disabled = false;
   document.querySelector('#stand-button').disabled = false;
   document.querySelector('#reveal-button').disabled = true;
+
+  document.querySelector('#start-gif').display = false;
 }
 
 var makeDeck = function () {
@@ -201,12 +205,14 @@ var playerHit = function () {
     myOutputValue += "<br>" + playerCards[p].name + " of " + playerCards[p].suit;
   }
 
+  myOutputValue += '<br><br>' + playerChooseGif + '<br><br>Hit or stand?';
+
   console.log('current player sum: ', playerCurrentSum);
   console.log('final dealer sum: ', dealerCurrentSum);
 
   gameState = gameStatePlayerChoose;
 
-  return [playerCards, myOutputValue, gameState];
+  return [playerCards, myOutputValue, gameState, playerChooseGif];
 }
 
 var playerStand = function () {
@@ -222,7 +228,7 @@ var playerStand = function () {
     console.log('control flow: gameState == ' + gameState);
     console.log('checking current player on submit click: ' + currentPlayer);
 
-    myOutputValue = 'Dealer hits.';
+    myOutputValue = 'Dealer hits.<br><br>' + dealerTurnGif;
     
     dealerHit();
 
@@ -241,7 +247,7 @@ var playerStand = function () {
     document.querySelector('#reveal-button').disabled = false;
   }
   else {
-    myOutputValue += 'Dealer stands.<br><br>Click reveal to see who won.';
+    myOutputValue += 'Dealer stands.<br><br>' + dealerTurnGif + '<br><br>Click reveal to see who won.';
   }
   document.querySelector('#hit-button').disabled = true;
   document.querySelector('#stand-button').disabled = true;
@@ -265,31 +271,34 @@ var revealWinner = function () {
 
   console.log('final player value: ', playerCurrentSum);
 
-  if (playerCurrentSum > 21 && dealerCurrentSum < 21) {
-    myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!' 
+  if (playerCurrentSum > 21 && dealerCurrentSum <= 21) {
+    if (dealerCurrentSum < 21) {
+      myOutputValue += 'You had ' + playerCurrentSum +'. Vecna had ' + dealerCurrentSum + '. <br><br>Vecna wins!' + '<br><br>' + playerLoseGif
+    }
+    else {
+      myOutputValue += 'You had ' + playerCurrentSum +'. Vecna had ' + dealerCurrentSum + '. <br><br>Vecna wins by black jack!' + '<br><br>' + playerLoseGif
+    }
   }
-  else if (playerCurrentSum < 21 && dealerCurrentSum > 21) {
-    myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win!' + '<br><br>' + playerWinImage
+  else if (playerCurrentSum <= 21 && dealerCurrentSum > 21) {
+    if (playerCurrentSum < 21) {
+      myOutputValue += 'You had ' + playerCurrentSum +'. Vecna had ' + dealerCurrentSum + '. <br><br>You win!' + '<br><br>' + playerWinGif
+    }
+    else {
+      myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win by black jack!' + '<br><br>' + playerWinGif
+    }
   }
-  else if (playerCurrentSum > 21 && dealerCurrentSum > 21) {
-    myOutputValue += 'Both you and the dealer went over 21. <br><br>Draw.'
-  }
-  else {
+  else if (playerCurrentSum <= 21 && dealerCurrentSum <= 21) {
     if (playerCurrentSum > dealerCurrentSum) {
-      if (playerCurrentSum == 21) {
-        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win by black jack!' + '<br><br>' + playerWinImage
-      }
-      else {
-        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win!' + '<br><br>' + playerWinImage
-      }
+      myOutputValue += 'You had ' + playerCurrentSum +'. Vecna had ' + dealerCurrentSum + '. <br><br>You win!' + '<br><br>' + playerWinGif
     }
     else if (playerCurrentSum < dealerCurrentSum) {
-      if (dealerCurrentSum == 21) {
-        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins by black jack!'
-      }
-      else {
-        myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Dealer wins!'
-      }
+      myOutputValue += 'You had ' + playerCurrentSum +'. Vecna had ' + dealerCurrentSum + '. <br><br>Vecna wins!' + '<br><br>' + playerLoseGif
+    }
+    else if (playerCurrentSum == 21) {
+      myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>You win by black jack!' + '<br><br>' + playerWinGif
+    }
+    else if (dealerCurrentSum == 21) {
+      myOutputValue += 'You had ' + playerCurrentSum +'. Vecna had ' + dealerCurrentSum + '. <br><br>Vecna wins by black jack!' + '<br><br>' + playerLoseGif
     }
     else {
       myOutputValue += 'You had ' + playerCurrentSum +'. Dealer had ' + dealerCurrentSum + '. <br><br>Draw!'
@@ -357,7 +366,7 @@ var main = function (input) {
     console.log('player card set: ', playerCardSet);
     console.log('dealer card set: ', dealerCardSet);
 
-    myOutputValue = playerMessage + '<br><br>' + 'Hit or stand?';
+    myOutputValue = playerMessage + '<br><br>' + playerChooseGif + '<br><br>' + 'Hit or stand?';
 
     gameState = gameStatePlayerChoose;
 
